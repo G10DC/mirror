@@ -1,0 +1,11 @@
+{
+  "name": "mirror",
+  "version": "1.0.0",
+  "description": "Multi-perspective pre-commit code reviewer",
+  "main": "lib/mirror.js",
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/mirror.test.js"
+  },
+  "license": "MIT"
+}
