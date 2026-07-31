@@ -24,3 +24,7 @@ Or target specific files:
 ```bash
 node C:/Users/GdC/.gemini/config/skills/mirror/lib/mirror.js --file "src/components/UserLogin.js"
 ```
+
+## When NOT to use
+- **Auditing packages and dependencies**: For licensing or security scans on manifests like `package.json` or `requirements.txt` → use `lookout` instead.
+- **Active security assessments or pentesting**: For active network scans, ports scanning, and sandboxed exploits on running services → use `siege` instead.
