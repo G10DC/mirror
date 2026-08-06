@@ -1,6 +1,12 @@
 ---
 name: mirror
-description: Runs a pre-commit, multi-perspective code review — security, correctness, and maintainability passes over the actual diff about to be committed. Use for/when reviewing staged changes before commit, catching injection risks or unsafe patterns introduced in this diff, or getting a second-opinion pass on a pull request. Never use to audit third-party dependency vulnerabilities or licenses (use lookout instead); never use to actively probe or exploit a live target (use siege instead) — mirror only reads the diff, it never scans dependency trees or attacks running services.
+description: >-
+  Runs a pre-commit, multi-perspective code review -- security, correctness, and
+  maintainability passes over the actual diff about to be committed. Use when
+  reviewing staged changes before commit, catching injection risks, or getting a
+  second-opinion pass on a pull request. Never use to audit dependency
+  vulnerabilities -- use lookout instead; never use to probe a live target --
+  use siege instead.
 ---
 
 # mirror
