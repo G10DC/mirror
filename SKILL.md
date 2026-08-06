@@ -25,6 +25,7 @@ A single-pass self-review misses what a second perspective catches. One rule abo
 
 ## When to use
 
+<<<<<<< HEAD
 - Reviewing staged changes before commit for security, correctness, or maintainability issues.
 - A second-opinion pass on a pull request diff.
 
@@ -34,3 +35,23 @@ A single-pass self-review misses what a second perspective catches. One rule abo
   use `lookout`. Mirror reads code; lookout reads the dependency tree.
 - **The goal is to actively probe or exploit a live target to validate a vulnerability** →
   use `siege`. Mirror is a static, read-only pass on a diff — it never touches running services.
+=======
+Run from any project directory:
+```bash
+node lib/mirror.js --diff
+```
+Or target specific files:
+```bash
+node lib/mirror.js --file "src/components/UserLogin.js"
+```
+
+
+---
+
+## ⚡ Spark Breakthrough Enhancement
+
+- **Feature**: **Multi-Angle Automated PR Gatekeeper**
+- **Description**: Emits PASS/WARN/FAIL scores across Security, Performance, Readability, and A11y.
+- **Synergy**: Integrated with `shipwright` (commit enforcement) & `lookout` (license audit).
+- **Framework**: Applied via the `spark` 4-Lens Lateral Ideation Engine.
+>>>>>>> cfc19c4 (feat(spark): integrate spark breakthrough enhancements into mirror)
