@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "test": "echo No tests configured"
+    "test": "node --test \"test/**/*.test.{js,mjs,cjs}\" \"tests/**/*.test.{js,mjs,cjs}\""
   },
-  "license": "MIT"
+  "license": "MIT",
+  "engines": {
+    "node": ">=22.0.0"
+  }
 }

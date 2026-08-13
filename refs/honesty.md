@@ -1,6 +1,6 @@
 # Mirror Pre-Commit Code Review Honesty Layer
 
-The honesty layer is the operational expression of the **G10DC Trellis Standard**: **the processing engine reasons over verified evidence with stated confidence, never hallucinates capabilities or impact.**
+The honesty layer is the operational expression of the **G10DC Trellis Standard**: **the LLM reasons over verified evidence with stated confidence, never hallucinates capabilities or impact.**
 
 ## Domain & Scope
 **Domain**: Multi-Perspective Pre-Commit Review Engine

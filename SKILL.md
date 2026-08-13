@@ -1,5 +1,6 @@
 ---
 name: mirror
+status: implemented
 description: >-
   Runs a pre-commit, multi-perspective code review -- security, correctness, and
   maintainability passes over the actual diff about to be committed. Use when
@@ -16,47 +17,40 @@ A single-pass self-review misses what a second perspective catches. One rule abo
 
 ## Golden rules
 
-1. **Scope is the staged diff.** Mirror reviews what's about to be committed — not the whole
-   repository, not dependency trees, not running infrastructure.
-2. **Security review is one lens among several.** `lib/security.js` covers the injection/unsafe
-   pattern pass, but correctness and maintainability get equal weight — a secure diff that's
-   unmaintainable still fails review.
-3. **Findings block, they don't just annotate.** A finding at commit-blocking severity halts the
-   commit; lower-severity findings are surfaced but don't halt.
-4. **Multi-perspective means genuinely different lenses, not repeated passes.** Each perspective
-   (security, correctness, maintainability) evaluates independently before findings are merged.
-5. **Never widen scope into dependency or infrastructure territory.** If a finding points at a
-   vulnerable dependency or a live-service weakness, surface it and hand off — don't try to
-   audit or exploit it from inside mirror.
+1. **Scope is the staged diff text.** Mirror reviews only the `+` lines of a unified diff string
+   — not the whole repo, not dependency trees, not running infrastructure.
+2. **Four lenses, each a fixed regex check.** Security, correctness, maintainability, and
+   performance run independently per added line; findings merge into one ranked verdict.
+3. **Findings block, they don't just annotate.** Any `HIGH` finding forces `verdict: BLOCK`;
+   lower-severity findings surface under `WARN` without blocking.
+
+## Honest scope
+
+Each "lens" is one or two regexes, not a semantic analyzer: **security** = an OpenAI-style
+`sk-...` pattern, `api_key\s*[:=]`, and `eval(`/`exec(`; **correctness** = loose `== null`/`!= null`;
+**maintainability** = `// TODO`/`// FIXME`; **performance** = sync `fs.readFileSync`/`writeFileSync`
+outside tests. That's the whole rule set — no SQL injection, XSS, logic-bug, or broad secret
+detection (AWS/GitHub tokens aren't matched). A clean pass means "these four patterns weren't
+found," not "this diff is safe."
 
 ## When to use
 
-- Reviewing staged changes before commit for security, correctness, or maintainability issues.
-- A second-opinion pass on a pull request diff.
+- Reviewing staged changes for the specific patterns above; a fast, zero-dependency first pass
+  before a human or a fuller tool reviews the diff.
 
 ## When NOT to use
 
-- **The concern is a dependency's known CVEs or license compliance, not this diff's logic** →
-  use `lookout`. Mirror reads code; lookout reads the dependency tree.
-- **The goal is to actively probe or exploit a live target to validate a vulnerability** →
-  use `siege`. Mirror is a static, read-only pass on a diff — it never touches running services.
+- **Real vulnerability coverage beyond four regex checks** → pair with a real SAST tool.
+- **A dependency's CVEs or license compliance** → use `lookout`; mirror reads code, not the tree.
+- **Probing or exploiting a live target** → use `siege`; mirror is static and read-only.
 
-## Usage Commands
+## Usage (library, not a CLI)
 
-Run from any project directory:
-```bash
-node lib/mirror.js --diff
+```js
+import { MirrorReviewer } from './lib/mirror.js';
+
+const diffText = execSync('git diff --staged', { encoding: 'utf8' });
+const result = new MirrorReviewer().reviewDiff(diffText);
+// result.verdict: 'PASS' | 'WARN' | 'BLOCK'
+// result.findings: [{ lens, severity, file, line, message }, ...]
 ```
-Or target specific files:
-```bash
-node lib/mirror.js --file "src/components/UserLogin.js"
-```
-
----
-
-## Spark Breakthrough Enhancement
-
-- **Feature**: **Multi-Angle Automated PR Gatekeeper**
-- **Description**: Emits PASS/WARN/FAIL scores across Security, Performance, Readability, and A11y.
-- **Synergy**: Integrated with `shipwright` (commit enforcement) & `lookout` (license audit).
-- **Framework**: Applied via the `spark` 4-Lens Lateral Ideation Engine.
