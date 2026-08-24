@@ -54,3 +54,15 @@ const result = new MirrorReviewer().reviewDiff(diffText);
 // result.verdict: 'PASS' | 'WARN' | 'BLOCK'
 // result.findings: [{ lens, severity, file, line, message }, ...]
 ```
+
+## An empty diff is not a clean diff
+
+When there are no added lines to look at, `reviewDiff` returns `measured: false`,
+`confidence: 'none'`, `analysedLines: 0`, and an `honest` line saying the diff is
+unexamined rather than clean. The `verdict` stays `PASS` for callers that only branch
+on it, but `measured` is the field to trust.
+
+It used to return `PASS` with `confidence: 'high'` — a confident all-clear over
+nothing. That is reachable by accident far more often than it looks: a wrong branch
+name, a diff taken against the wrong base, a range that resolves to no changes.
+Aggregates consuming only `verdict` recorded a passed review of an empty input.
